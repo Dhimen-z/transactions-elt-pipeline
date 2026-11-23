@@ -1,0 +1,31 @@
+version: 2
+models:
+  - name: fct_transactions
+    description: "Table de faits des transactions (grain : une transaction), chargée en incrémental."
+    columns:
+      - name: transaction_id
+        tests: [unique, not_null]
+      - name: customer_id
+        tests:
+          - relationships:
+              arguments: {to: ref('dim_customer'), field: customer_id}
+      - name: event_date
+        tests:
+          - relationships:
+              arguments: {to: ref('dim_date'), field: date_day}
+  - name: dim_customer
+    columns:
+      - name: customer_id
+        tests: [unique, not_null]
+  - name: dim_merchant
+    columns:
+      - name: merchant_id
+        tests: [unique, not_null]
+  - name: dim_date
+    columns:
+      - name: date_day
+        tests: [unique, not_null]
+  - name: agg_daily_merchant
+    columns:
+      - name: taux_acceptation
+        tests: [not_null]
